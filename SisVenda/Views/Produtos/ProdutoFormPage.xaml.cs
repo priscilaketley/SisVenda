@@ -47,11 +47,18 @@ namespace SisVenda
         private async void Salvar_Clicked(object sender, EventArgs e)
         {
             var nome = nomeEntry.Text?.Trim();
+            var codigo = codigoEntry.Text?.Trim();
             var descricao = descricaoEditor.Text?.Trim();
 
             if (string.IsNullOrWhiteSpace(nome))
             {
                 await DisplayAlert("Validação", "Nome é obrigatório.", "OK");
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(codigo))
+            {
+                await DisplayAlert("Validação", "Código é obrigatório.", "OK");
                 return;
             }
 
@@ -72,6 +79,7 @@ namespace SisVenda
                 var p = ProdutoRepository.GetById(productId);
                 if (p != null)
                 {
+                    p.Codigo = codigo;
                     p.Nome = nome;
                     p.Preco = preco;
                     p.Descricao = descricao;
@@ -83,6 +91,7 @@ namespace SisVenda
                 var novo = new Produto
                 {
                     Id = ProdutoRepository.Produtos.Any() ? ProdutoRepository.Produtos.Max(x => x.Id) + 1 : 1,
+                    Codigo = codigo,
                     Nome = nome,
                     Preco = preco,
                     Descricao = descricao,
@@ -111,6 +120,7 @@ namespace SisVenda
 
         void PopulateForm(Produto p)
         {
+            codigoEntry.Text = p.Codigo;
             nomeEntry.Text = p.Nome;
             precoEntry.Text = p.Preco.ToString("F2", new CultureInfo("pt-BR"));
             descricaoEditor.Text = p.Descricao;
@@ -119,6 +129,7 @@ namespace SisVenda
 
         void ClearForm()
         {
+            codigoEntry.Text = string.Empty;
             nomeEntry.Text = string.Empty;
             precoEntry.Text = string.Empty;
             descricaoEditor.Text = string.Empty;

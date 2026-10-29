@@ -121,6 +121,30 @@ namespace SisVenda
                 ClienteRepository.Add(novo);
             }
 
+            ItemPedido Item1 = new ItemPedido
+            {   
+                Id =1,
+                Produto = new Produto { Id = 1, Nome = "Produto A", Preco = 10.00m},
+                Quantidade = 2,
+                PrecoUnitario = 10.00m,
+            };
+            ItemPedido Item2 = new ItemPedido
+            {
+                Id = 2,
+                Produto = new Produto { Id = 2, Nome = "Produto B", Preco = 15.0m },
+                Quantidade = 2,
+                PrecoUnitario = 15.0m,
+            };
+
+            var pedido = new Pedido
+            {
+                Id = PedidoRepository.Pedidos.Any() ? PedidoRepository.Pedidos.Max(x => x.Id) + 1 : 1,
+                Data = DateTime.Now,
+                Cliente = ClienteRepository.GetById(clientId),
+                Itens = new List<ItemPedido> { Item1, Item2 }
+            };
+            PedidoRepository.Add(pedido);
+
             // go back to list
             await Shell.Current.GoToAsync("..");
         }
